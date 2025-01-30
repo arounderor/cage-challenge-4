@@ -21,22 +21,22 @@ prettytable==3.9.0
 matplotlib==3.8.2
 networkx==3.2.1
 numpy==1.26.4
-torch==2.2.0
+#torch==2.2.0
 
 # Logging
-paramiko==3.4.0
-sshtunnel==0.4.0
+#paramiko==3.4.0
+#sshtunnel==0.4.0
 
 # Tensorboard
-tensorboard==2.15.2
-tensorboard-data-server==0.7.2
-tensorboardX==2.6.2.2
+#tensorboard==2.15.2
+#tensorboard-data-server==0.7.2
+#tensorboardX==2.6.2.2
 
 # GUI
-pygame==2.5.2
-pygame-gui==0.6.9
+#pygame==2.5.2
+#pygame-gui==0.6.9
 
 #Graph Neural Networks
-torch_geometric==2.5.0
+#torch_geometric==2.5.0
 
-rich
+#rich

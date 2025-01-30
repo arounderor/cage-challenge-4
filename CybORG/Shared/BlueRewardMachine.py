@@ -79,7 +79,7 @@ class BlueRewardMachine(RewardCalculator):
             current agent observations
         done : bool
             has the episode ended
-        state: State
+        state: Statek
             current State object
 
         Returns

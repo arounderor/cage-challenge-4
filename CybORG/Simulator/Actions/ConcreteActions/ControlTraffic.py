@@ -45,14 +45,29 @@ class ControlTraffic(LocalAction):
         raise NotImplementedError
     
 
+# class BlockTraffic(ControlTraffic):
+#     def __init__(self, session: int, agent: str, ip_address: IPv4Address):
+#         super().__init__(session, agent)
+#         self.ip_address = ip_address
+
+#     def execute_control_traffic(self, state: State) -> Observation:
+#         hostname = state.sessions[self.agent][self.session].hostname
+#         other_hostname = state.ip_addresses[self.ip_address]
+#         if hostname in state.blocks and other_hostname in state.blocks[hostname]:
+#             self.log(f"'{other_hostname}' is already blocked by '{hostname}'.")
+#             return Observation(False)
+#         state.blocks.setdefault(hostname, []).append(other_hostname)
+#         return Observation(True)
+
 class BlockTraffic(ControlTraffic):
-    def __init__(self, session: int, agent: str, ip_address: IPv4Address):
+    def __init__(self, session: int, agent: str, srchost: str, dsthost: str):
         super().__init__(session, agent)
-        self.ip_address = ip_address
+        self.srchost = srchost
+        self.dsthost = dsthost
 
     def execute_control_traffic(self, state: State) -> Observation:
-        hostname = state.sessions[self.agent][self.session].hostname
-        other_hostname = state.ip_addresses[self.ip_address]
+        hostname = self.dsthost
+        other_hostname = self.srchost
         if hostname in state.blocks and other_hostname in state.blocks[hostname]:
             self.log(f"'{other_hostname}' is already blocked by '{hostname}'.")
             return Observation(False)
@@ -115,14 +130,28 @@ class BlockTrafficZone(ControlTraffic):
         state.blocks.setdefault(self.to_subnet, []).append(self.from_subnet)
         return Observation(True)
 
-class AllowTraffic(ControlTraffic):
-    def __init__(self, session: int, agent: str, ip_address: IPv4Address):
-        super().__init__(session, agent)
-        self.ip_address = ip_address
+# class AllowTraffic(ControlTraffic):
+#     def __init__(self, session: int, agent: str, ip_address: IPv4Address):
+#         super().__init__(session, agent)
+#         self.ip_address = ip_address
 
+#     def execute_control_traffic(self, state: State) -> Observation:
+#         hostname = state.sessions[self.agent][self.session].hostname
+#         other_hostname = state.ip_addresses[self.ip_address]
+#         if hostname in state.blocks and other_hostname in state.blocks[hostname]:
+#             state.blocks[hostname].remove(other_hostname)
+#             return Observation(True)
+#         self.log(f"'{other_hostname}' is not blocked by '{hostname}'.")
+#         return Observation(False)
+
+class AllowTraffic(ControlTraffic):
+    def __init__(self, session: int, agent: str, srchost:str, dsthost: str):
+        super().__init__(session, agent)
+        self.srchost = srchost
+        self.dsthost = dsthost
     def execute_control_traffic(self, state: State) -> Observation:
-        hostname = state.sessions[self.agent][self.session].hostname
-        other_hostname = state.ip_addresses[self.ip_address]
+        hostname = self.dsthost
+        other_hostname = self.srchost
         if hostname in state.blocks and other_hostname in state.blocks[hostname]:
             state.blocks[hostname].remove(other_hostname)
             return Observation(True)

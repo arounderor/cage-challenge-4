@@ -1,6 +1,7 @@
 # Copyright DST Group. Licensed under the MIT license.
 import itertools
 import sys
+import pprint
 from typing import List, Dict, Tuple
 
 from CybORG.Agents import BaseAgent, SleepAgent

@@ -200,8 +200,8 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser("CybORG Evaluation Script")
-    parser.add_argument("submission_path", type=str)
-    parser.add_argument("output_path", type=str)
+    # parser.add_argument("submission_path", type=str)
+    # parser.add_argument("output_path", type=str)
     parser.add_argument(
         "--append-timestamp",
         action="store_true",
@@ -212,8 +212,10 @@ if __name__ == "__main__":
     )
     parser.add_argument("--max-eps", type=int, default=100, help="Max episodes to run")
     args = parser.parse_args()
-    args.output_path = os.path.abspath(args.output_path)
-    args.submission_path = os.path.abspath(args.submission_path)
+    # args.output_path = os.path.abspath(args.output_path)
+    # args.submission_path = os.path.abspath(args.submission_path)
+    args.output_path = os.path.abspath('tmp')
+    args.submission_path = os.path.abspath('')
 
     if not args.output_path.endswith("/"):
         args.output_path += "/"

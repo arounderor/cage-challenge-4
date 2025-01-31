@@ -269,26 +269,40 @@ class BlueFixedActionWrapper(BaseWrapper):
                 continue
 
             if command_name in ("AllowTraffic", "BlockTraffic"):
-
-                for session_id, session in state.sessions[agent_name].items():
-                    if "router" in session.hostname:
-                        continue
-                    dsthost = session.hostname
-
-                    for srcname, srcip in sorted_host_name_to_ip:
-                        if "router" in srcname:
-                            continue
-                        srcname = srcname.lower()
-                        if dsthost == srcname:
-                            continue
-                        actions.append(
-                            command(session=session_id, agent=agent_name, ip_address=srcip)
+                host_dict = self._agent_metadata[agent_name]["hosts"]
+                subnet_dict = self._agent_metadata[agent_name]["subnets"]
+                for subnet in subnet_dict.values():
+                    for dsthost in [host for host in host_dict.values() if subnet in host]:
+                        for srchost in [host for host in host_dict.values() if subnet not in host]:
+                            if "router" in dsthost or "router" in srchost:
+                                continue
+                            actions.append(
+                            command(**action_params, srchost=srchost, dsthost=dsthost)
                         )
-                        labels.append(
-                            f"{command_name} {dsthost}({sorted_host_name_to_ip[dsthost]})<- {srcname} ({srcip})"
+                            labels.append(
+                            f"{command_name} {dsthost}({sorted_host_name_to_ip[dsthost]})<- {srchost} ({sorted_host_name_to_ip[srchost]})"
                         )
-                        mask.append(True)
+                            mask.append(True)
                 continue
+                # for session_id, session in state.sessions[agent_name].items():
+                #     if "router" in session.hostname:
+                #         continue
+                #     dsthost = session.hostname
+
+                #     for srcname, srcip in sorted_host_name_to_ip:
+                #         if "router" in srcname:
+                #             continue
+                #         srcname = srcname.lower()
+                #         if dsthost == srcname:
+                #             continue
+                #         actions.append(
+                #             command(session=session_id, agent=agent_name, ip_address=srcip)
+                #         )
+                #         labels.append(
+                #             f"{command_name} {dsthost}({sorted_host_name_to_ip[dsthost]})<- {srcname} ({srcip})"
+                #         )
+                #         mask.append(True)
+                # continue
 
             # All other (host-based) commands.
             for hostname in self._agent_metadata[agent_name]["hosts"]:

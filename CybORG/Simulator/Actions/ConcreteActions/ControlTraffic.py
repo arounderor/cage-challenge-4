@@ -72,6 +72,7 @@ class BlockTraffic(ControlTraffic):
             self.log(f"'{other_hostname}' is already blocked by '{hostname}'.")
             return Observation(False)
         state.blocks.setdefault(hostname, []).append(other_hostname)
+
         return Observation(True)
 
 class BlockTrafficZone(ControlTraffic):
@@ -144,7 +145,7 @@ class BlockTrafficZone(ControlTraffic):
 #         self.log(f"'{other_hostname}' is not blocked by '{hostname}'.")
 #         return Observation(False)
 
-class AllowTraffic(ControlTraffic):
+class AllowTraffic(ControlTraffic):##双向操作
     def __init__(self, session: int, agent: str, srchost:str, dsthost: str):
         super().__init__(session, agent)
         self.srchost = srchost
